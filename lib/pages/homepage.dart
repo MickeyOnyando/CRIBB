@@ -4,6 +4,7 @@ import 'package:cribb/components/house_type.dart';
 import 'package:cribb/components/house_tile.dart';
 import 'package:cribb/models/house_shop.dart';
 import 'package:cribb/models/house.dart';
+import 'package:cribb/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final AuthService _auth = AuthService();
   //list of house types
   final List _houseTypes = [
     //[houseType] [selected]
@@ -38,26 +41,6 @@ class _HomePageState extends State<HomePage> {
       false,
     ],
   ];
-
-  //list of selected and found houses
-  List<House> _foundHouse = [];
-
-  @override
-  void initState() {
-    HouseShop _houseShop = HouseShop();
-    _foundHouse = _houseShop.house;
-    super.initState();
-    
-  }
-
-  void filteredHouses(String enteredKeyword){
-    HouseShop _houseShop = HouseShop();
-    List <House> results = [];
-    if(enteredKeyword.isEmpty){
-      results =  _houseShop.house;
-
-    }
-  }
 
   //selected house type method
   void houseTypeSelected(int index) {
@@ -90,6 +73,21 @@ class _HomePageState extends State<HomePage> {
           Icons.menu,
           color: Colors.white,
         ),
+        actions: [
+          TextButton.icon(
+            onPressed: () async {
+              try {
+                await _auth.signingOut();
+                // Navigate to the login page or any other page after sign out
+                
+              } catch (e) {
+                print('Error signing out: $e');
+              }
+            },
+            label: const Text('Logoff'),
+            icon: const Icon(Icons.exit_to_app),
+          ),
+        ],
         backgroundColor: Colors.blue,
         automaticallyImplyLeading: false,
       ),
@@ -97,9 +95,7 @@ class _HomePageState extends State<HomePage> {
       body: Consumer<HouseShop>(
         builder: (context, value, child) => Column(
           children: [
-            HeaderAndSeachbar(
-               onChanged: (String value) => filteredHouses(value),
-            ),
+            const HeaderAndSeachbar(),
             const SizedBox(
               height: 16,
             ),
@@ -109,15 +105,15 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: ListView.builder(
-                  itemCount: _houseTypes.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                  return HouseType(
-                    houseType: _houseTypes[index][0],
-                    isSelected: _houseTypes[index][1],
-                    onTap: () => houseTypeSelected(index),
-                  );
-                }),
+                    itemCount: _houseTypes.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return HouseType(
+                        houseType: _houseTypes[index][0],
+                        isSelected: _houseTypes[index][1],
+                        onTap: () => houseTypeSelected(index),
+                      );
+                    }),
               ),
             ),
             const SizedBox(

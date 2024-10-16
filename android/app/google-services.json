@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "325274380326",
+    "project_id": "cribb-eb267",
+    "storage_bucket": "cribb-eb267.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325274380326:android:c9e281dd337a30fb4f5ee7",
+        "android_client_info": {
+          "package_name": "com.rafutech.cribb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHw9BmqrptKxj3gGMzO7QqEyX6K7rXf9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

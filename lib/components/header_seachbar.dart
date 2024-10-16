@@ -1,8 +1,10 @@
+import 'package:cribb/components/house_tile.dart';
+import 'package:cribb/models/house.dart';
+import 'package:cribb/models/house_shop.dart';
 import 'package:flutter/material.dart';
 
 class HeaderAndSeachbar extends StatefulWidget {
-  final VoidCallback onChanged;
-  const HeaderAndSeachbar({super.key, required this.onChanged,});
+  const HeaderAndSeachbar({super.key});
 
   @override
   State<HeaderAndSeachbar> createState() => _HeaderAndSeachbarState();
@@ -73,7 +75,6 @@ class _HeaderAndSeachbarState extends State<HeaderAndSeachbar> {
                     ),
                   ]),
               child: TextField(
-                onChanged: (value) => widget.onChanged,
                 decoration: InputDecoration(
                   hintText: "Search",
                   hintStyle: TextStyle(
@@ -81,9 +82,14 @@ class _HeaderAndSeachbarState extends State<HeaderAndSeachbar> {
                   ),
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  suffixIcon: Icon(
-                    Icons.search_sharp,
-                    color: Colors.blue.withOpacity(0.5),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: CustomSearchDelegate(),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -91,6 +97,79 @@ class _HeaderAndSeachbarState extends State<HeaderAndSeachbar> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  HouseShop house = HouseShop();
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          }),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<House> _matchHouses = [];
+    for (var home in house.house) {
+      if (home.university.toLowerCase().contains(query.toLowerCase())) {
+        _matchHouses.add(home);
+      }
+    }
+    return ListView.builder(
+      itemCount: _matchHouses.length,
+      itemBuilder: (context, index) {
+        return HouseTile(
+          onIconTap: () => {},
+          icon: const Icon(
+            Icons.favorite,
+            size: 30,
+            color: Colors.amber,
+          ),
+          house: _matchHouses[index],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<House> _matchHouses = [];
+    for (var home in house.house) {
+      if (home.university.toLowerCase().contains(query.toLowerCase())) {
+        _matchHouses.add(home);
+      }
+    }
+    return ListView.builder(
+      itemCount: _matchHouses.length,
+      itemBuilder: (context, index) {
+        return HouseTile(
+          onIconTap: () => {},
+          icon: const Icon(
+            Icons.favorite,
+            size: 30,
+            color: Colors.amber,
+          ),
+          house: _matchHouses[index],
+        );
+      },
     );
   }
 }
